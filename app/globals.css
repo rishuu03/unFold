@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+@theme {
+  --color-surface: #19101f;
+  --color-surface-lowest: #130b19;
+  --color-surface-low: #211827;
+  --color-surface-container: #251c2b;
+  --color-surface-high: #302636;
+  --color-surface-highest: #3a2e42;
+  
+  --color-primary: #ddb7ff;
+  --color-primary-container: #490080;
+  --color-secondary: #0566d9;
+  --color-tertiary: #f8acff;
+  
+  --color-on-surface: #edddf3;
+  --color-on-surface-variant: #cfc2d6;
+  --color-outline-variant: #4d4354;
+
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-label: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer utilities {
+  .glass-panel {
+    @apply bg-surface-container/60 backdrop-blur-2xl border border-white/5;
+  }
+  
+  .ghost-border {
+    @apply border border-outline-variant/15;
+  }
+
+  .ambient-glow-primary {
+    box-shadow: 0 20px 80px -10px rgba(221, 183, 255, 0.15);
+  }
+
+  .ambient-glow-secondary {
+    box-shadow: 0 20px 80px -10px rgba(5, 102, 217, 0.15);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .glow-blur {
+    filter: blur(120px);
+    opacity: 0.4;
+    pointer-events: none;
+  }
+}
+
+body {
+  @apply bg-surface text-on-surface font-sans overflow-x-hidden selection:bg-primary/30 selection:text-primary;
+}

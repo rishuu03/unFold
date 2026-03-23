@@ -1,0 +1,54 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: waitlist
+    // Document ID: Auto-generated
+    // Fields:
+    //   - email: string (required, valid email format)
+    //   - createdAt: timestamp (required, server timestamp)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+
+    function isValidWaitlistEntry() {
+      return hasOnlyAllowedFields(['email', 'createdAt']) &&
+             hasRequiredFields(['email', 'createdAt']) &&
+             isValidEmail(request.resource.data.email) &&
+             request.resource.data.createdAt is timestamp;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /waitlist/{entryId} {
+      // Anyone can join the waitlist, but they cannot read, update, or delete entries.
+      allow create: if isValidWaitlistEntry();
+      allow read, update, delete: if false;
+    }
+  }
+}
